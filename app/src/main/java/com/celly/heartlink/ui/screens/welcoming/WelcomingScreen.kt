@@ -1,0 +1,108 @@
+package com.celly.heartlink.ui.screens.welcoming
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.celly.heartlink.R
+import com.celly.heartlink.navigation.ROUT_HOME
+
+// Define a new, softer color palette for this specific screen
+val GradientStart = Color(0xFFEAD6FD) // Lighter purple
+val GradientEnd = Color(0xFFF7F7F7)   // Soft gray
+
+@Composable
+fun WelcomeMessageScreen(navController: NavController) {
+    val messageText = buildAnnotatedString {
+        append("Welcome to a place where your heart is our link. ")
+        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)) {
+            append("You are seen. You are loved. You are appreciated.")
+        }
+        append(" The journey ahead is yours to write, and you have the strength to conquer it all. This is not the end; it's the beginning of a beautiful new chapter. Let's start it together.")
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(GradientStart, GradientEnd)
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // New: Image or Logo at the top
+            Image(
+                painter = painterResource(id = R.drawable.app_logo), // Replace with your logo's resource ID
+                contentDescription = "Heartlink Logo",
+                modifier = Modifier.size(120.dp)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Hello, Brave Heart.",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Black,
+                fontFamily = FontFamily.Cursive,
+                color = Color(0xFF673AB7),
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = messageText,
+                fontSize = 18.sp,
+                fontFamily = FontFamily.Default,
+                textAlign = TextAlign.Center,
+                lineHeight = 28.sp,
+                color = Color(0xFF616161)
+            )
+            Spacer(modifier = Modifier.height(48.dp))
+            Button(
+                onClick = { navController.navigate(ROUT_HOME) { popUpTo(ROUT_HOME) { inclusive = true } } },
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF673AB7)),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+                Text(
+                    text = "Begin My Journey",
+                    fontSize = 25.sp,
+                    fontFamily = FontFamily.Cursive,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WelcomeMessageScreenPreview() {
+    WelcomeMessageScreen(navController = rememberNavController())
+}

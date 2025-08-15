@@ -1,0 +1,19 @@
+package com.celly.heartlink.navigation
+
+const val ROUT_HOME = "home"
+const val ROUT_ABOUT = "about"
+const val ROUT_SPLASH= "splash"
+const val ROUT_COMMUNITY= "community"
+const val ROUT_JOURNAL= "journal"
+const val ROUT_RESOURCES= "resources"
+const val ROUT_REMINDERS= "reminders"
+const val ROUT_WELCOMING= "welcoming"
+const val ROUT_PROGRESS= "progress"
+const val ROUT_DAILYAFFIRMATION= "dailyaffirmation"
+const val ROUT_MOODTRACKER= "moodtracker"
+
+
+//Auth
+
+const val ROUT_REGISTER= "register"
+const val ROUT_LOGIN= "login"
