@@ -7,6 +7,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -22,11 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.celly.heartlink.ui.screens.progress.getDarkGreen
-import com.celly.heartlink.ui.screens.progress.getGrey700
-import com.celly.heartlink.ui.screens.progress.getLightGray
-import com.celly.heartlink.ui.screens.progress.getOrange500
-import com.celly.heartlink.ui.screens.progress.getPurple500
+import com.celly.heartlink.ui.screens.dailyaffirmation.getDarkGreen
+import com.celly.heartlink.ui.screens.dailyaffirmation.getGrey700
+import com.celly.heartlink.ui.screens.dailyaffirmation.getLightGray
+import com.celly.heartlink.ui.screens.dailyaffirmation.getOrange500
+import com.celly.heartlink.ui.screens.dailyaffirmation.getPurple500
 
 // Data classes for milestones to keep the code clean and organized
 data class Achievement(
@@ -91,6 +95,53 @@ fun MilestoneScreen(navController: NavController) {
                     containerColor = getPurple500()
                 )
             )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = com.celly.heartlink.ui.screens.clinics.Purple500,
+                contentColor = Color.White
+            ) {
+                // Home Icon
+                IconButton(
+                    onClick = { navController.navigate("home_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Home, contentDescription = "Home")
+                        Text(text = "Home", fontSize = 12.sp)
+                    }
+                }
+                // Check-in Icon
+                IconButton(
+                    onClick = { navController.navigate("mood_tracker_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Face, contentDescription = "Check-in")
+                        Text(text = "Check-in", fontSize = 12.sp)
+                    }
+                }
+                // Journal Icon
+                IconButton(
+                    onClick = { navController.navigate("journal_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Create, contentDescription = "Journal")
+                        Text(text = "Journal", fontSize = 12.sp)
+                    }
+                }
+                // Settings Icon
+                IconButton(
+                    onClick = { navController.navigate("settings_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Text(text = "Settings", fontSize = 12.sp)
+                    }
+                }
+            }
         },
         containerColor = getLightGray()
     ) { paddingValues ->

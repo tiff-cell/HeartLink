@@ -7,8 +7,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -68,6 +73,53 @@ fun JournalScreen(navController: NavController) {
                }
             }
          )
+      },
+      bottomBar = {
+         BottomAppBar(
+            containerColor = com.celly.heartlink.ui.screens.clinics.Purple500,
+            contentColor = Color.White
+         ) {
+            // Home Icon
+            IconButton(
+               onClick = { navController.navigate("home_route") },
+               modifier = Modifier.weight(1f)
+            ) {
+               Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                  Icon(Icons.Default.Home, contentDescription = "Home")
+                  Text(text = "Home", fontSize = 12.sp)
+               }
+            }
+            // Check-in Icon
+            IconButton(
+               onClick = { navController.navigate("mood_tracker_route") },
+               modifier = Modifier.weight(1f)
+            ) {
+               Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                  Icon(Icons.Default.Face, contentDescription = "Check-in")
+                  Text(text = "Check-in", fontSize = 12.sp)
+               }
+            }
+            // Journal Icon
+            IconButton(
+               onClick = { navController.navigate("journal_route") },
+               modifier = Modifier.weight(1f)
+            ) {
+               Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                  Icon(Icons.Default.Create, contentDescription = "Journal")
+                  Text(text = "Journal", fontSize = 12.sp)
+               }
+            }
+            // Settings Icon
+            IconButton(
+               onClick = { navController.navigate("settings_route") },
+               modifier = Modifier.weight(1f)
+            ) {
+               Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                  Icon(Icons.Default.Settings, contentDescription = "Settings")
+                  Text(text = "Settings", fontSize = 12.sp)
+               }
+            }
+         }
       },
       floatingActionButton = {
          FloatingActionButton(

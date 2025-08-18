@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.play.services.vision)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,15 +87,37 @@ dependencies {
     // Other dependencies...
     // In your app/build.gradle.kts file
 
-    dependencies {
+
         // Add this line for the Vico charting library
         implementation("com.patrykandpatrick.vico:core:1.14.0")
         implementation("com.patrykandpatrick.vico:compose:1.14.0")
-    }
-    dependencies {
-        // Vico library for charts
-        implementation("com.patrykandpatrick.vico:compose:1.14.0")
-    }
+
+    // cHART
+    implementation("com.patrykandpatrick.vico:core:1.14.0")
+    implementation("com.patrykandpatrick.vico:compose:1.14.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.14.0")
+    //eND
+
+
+    // Jetpack Compose
+    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    // Google Maps
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.maps.android:maps-compose:4.3.0")
+
+    // Location services
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Retrofit for API calls
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+    
 
 
 

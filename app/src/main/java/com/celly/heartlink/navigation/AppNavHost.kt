@@ -12,16 +12,19 @@ import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.data.UserDatabase
 import com.celly.heartlink.repository.UserRepository
 import com.celly.heartlink.ui.screens.about.AboutScreen
+import com.celly.heartlink.ui.screens.clinics.ClinicFinderScreen
+import com.celly.heartlink.ui.screens.clinics.MoodTrackerScreen
 import com.celly.heartlink.ui.screens.community.CommunityScreen
+import com.celly.heartlink.ui.screens.dailyaffirmation.DailyAffirmationScreen
 import com.celly.heartlink.ui.screens.home.HomeScreen
 import com.celly.heartlink.ui.screens.journal.JournalScreen
-import com.celly.heartlink.ui.screens.moodtracker.MoodTrackerScreen
-import com.celly.heartlink.ui.screens.progress.DailyAffirmationScreen
 import com.celly.heartlink.ui.screens.progress.ProgressScreen
 import com.celly.heartlink.ui.screens.reminders.RemindersScreen
 import com.celly.heartlink.ui.screens.resources.ResourcesScreen
+import com.celly.heartlink.ui.screens.settings.SettingsScreen
 import com.celly.heartlink.ui.screens.splash.SplashScreen
 import com.celly.heartlink.ui.screens.welcoming.WelcomeMessageScreen
+import com.celly.heartlink.ui.screens.wellness.WellnessScreen
 import com.celly.heartlink.viewmodel.AuthViewModel
 import com.celly.swaggy.ui.theme.screens.auth.LoginScreen
 import com.celly.swaggy.ui.theme.screens.auth.RegisterScreen
@@ -73,7 +76,18 @@ fun AppNavHost(
             DailyAffirmationScreen(navController)
         }
         composable(ROUT_MOODTRACKER) {
-           MoodTrackerScreen(navController)
+            MoodTrackerScreen(navController)
+        }
+        composable(ROUT_SETTINGS) {
+           SettingsScreen(navController)
+        }
+        composable(ROUT_WELLNESS) {
+            WellnessScreen(navController)
+        }
+        composable(ROUT_CLINIC) {
+            // Assuming API_KEY is a constant or variable with your Google Maps API key
+            val apiKey = "YOUR_GOOGLE_MAPS_API_KEY_HERE"
+            ClinicFinderScreen(apiKey)
         }
 
 
@@ -86,7 +100,7 @@ fun AppNavHost(
         composable(ROUT_REGISTER) {
             RegisterScreen(authViewModel, navController) {
                 navController.navigate(ROUT_LOGIN) {
-                    popUpTo(ROUT_REGISTER) { inclusive = true }
+                    popUpTo(ROUT_LOGIN) { inclusive = true }
                 }
             }
         }

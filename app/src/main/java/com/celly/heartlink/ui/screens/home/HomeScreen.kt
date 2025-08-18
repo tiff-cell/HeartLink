@@ -29,8 +29,10 @@ import com.celly.heartlink.R
 import com.celly.heartlink.navigation.ROUT_COMMUNITY
 import com.celly.heartlink.navigation.ROUT_HOME
 import com.celly.heartlink.navigation.ROUT_JOURNAL
+import com.celly.heartlink.navigation.ROUT_MOODTRACKER
 import com.celly.heartlink.navigation.ROUT_RESOURCES
-import com.celly.heartlink.navigation.ROUT_REMINDERS // Assuming a new route for the combined screen
+import com.celly.heartlink.navigation.ROUT_REMINDERS
+import com.celly.heartlink.navigation.ROUT_SETTINGS
 
 // Define the colors and font to match your login and register screens
 val Purple500 = Color(0xFF673AB7)
@@ -99,44 +101,70 @@ fun HomeScreen(navController: NavController) {
                     onClick = { navController.navigate(ROUT_HOME) },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Home",
-                        tint = Color.White
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Home,
+                            contentDescription = "Home",
+                            tint = Color.White
+                        )
+                        Text(text = "Home", fontSize = 10.sp, color = Color.White)
+                    }
                 }
-                // Community Icon
+                // Check-in Icon
                 IconButton(
-                    onClick = { navController.navigate(ROUT_COMMUNITY) },
+                    onClick = { navController.navigate(ROUT_MOODTRACKER) },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.community),
-                        contentDescription = "Community",
-                        tint = Color.White
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Face,
+                            contentDescription = "Check-in",
+                            tint = Color.White
+                        )
+                        Text(text = "Check-in", fontSize = 10.sp, color = Color.White)
+                    }
                 }
                 // Journal Icon
                 IconButton(
                     onClick = { navController.navigate(ROUT_JOURNAL) },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Journal",
-                        tint = Color.White
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Journal",
+                            tint = Color.White
+                        )
+                        Text(text = "Journal", fontSize = 10.sp, color = Color.White)
+                    }
                 }
                 // Resources Icon
                 IconButton(
                     onClick = { navController.navigate(ROUT_RESOURCES) },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = "Resources",
-                        tint = Color.White
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Resources",
+                            tint = Color.White
+                        )
+                        Text(text = "Resources", fontSize = 10.sp, color = Color.White)
+                    }
+                }
+                // Settings Icon
+                IconButton(
+                    onClick = { navController.navigate(ROUT_SETTINGS) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.White
+                        )
+                        Text(text = "Settings", fontSize = 10.sp, color = Color.White)
+                    }
                 }
             }
         }
@@ -339,7 +367,7 @@ fun CommunityCard(onButtonClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Person, // Changed to People for better icon representation of Community
+                imageVector = Icons.Default.Person,
                 contentDescription = "Community Icon",
                 modifier = Modifier.size(48.dp),
                 tint = Purple500

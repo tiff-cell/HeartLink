@@ -1,4 +1,4 @@
-package com.celly.heartlink.ui.screens.progress
+package com.celly.heartlink.ui.screens.dailyaffirmation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,7 +28,10 @@ import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.core.chart.values.AxisValueOverrider
+import com.patrykandpatrick.vico.core.chart.DefaultPointConnector
+import com.patrykandpatrick.vico.core.chart.line.LineChart
+import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
+import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 // Re-using colors from your previous code for consistency
@@ -58,6 +63,53 @@ fun DailyAffirmationScreen(navController: NavController) {
                     containerColor = getPurple500()
                 )
             )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = com.celly.heartlink.ui.screens.clinics.Purple500,
+                contentColor = Color.White
+            ) {
+                // Home Icon
+                IconButton(
+                    onClick = { navController.navigate("home_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Home, contentDescription = "Home")
+                        Text(text = "Home", fontSize = 12.sp)
+                    }
+                }
+                // Check-in Icon
+                IconButton(
+                    onClick = { navController.navigate("mood_tracker_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Face, contentDescription = "Check-in")
+                        Text(text = "Check-in", fontSize = 12.sp)
+                    }
+                }
+                // Journal Icon
+                IconButton(
+                    onClick = { navController.navigate("journal_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Create, contentDescription = "Journal")
+                        Text(text = "Journal", fontSize = 12.sp)
+                    }
+                }
+                // Settings Icon
+                IconButton(
+                    onClick = { navController.navigate("settings_route") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Text(text = "Settings", fontSize = 12.sp)
+                    }
+                }
+            }
         },
         containerColor = getLightGray()
     ) { paddingValues ->
@@ -153,7 +205,7 @@ fun MoodTrackerSection(onMoodLogged: () -> Unit) {
 }
 
 @Composable
-fun MoodHistoryGraph(moodData: com.patrykandpatrick.vico.core.entry.ChartEntryModel) {
+fun MoodHistoryGraph(moodData: ChartEntryModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -180,15 +232,14 @@ fun MoodHistoryGraph(moodData: com.patrykandpatrick.vico.core.entry.ChartEntryMo
             ) {
                 Chart(
                     chart = lineChart(
-                        axisValuesOverrider = AxisValueOverrider.fixed(
+                        axisValuesOverrider = AxisValuesOverrider.fixed(
                             minY = 1f,
                             maxY = 5f
                         ),
-                        // The brush is applied directly to the lineChart composable
-                        // and the lines parameter is removed
                         lines = listOf(
-                            lineSpec(
-                                brush = SolidColor(Orange500)
+                            LineChart.LineSpec(
+                                lineColor = 4,
+                                pointConnector = DefaultPointConnector(cubicStrength = 0.5f)
                             )
                         )
                     ),

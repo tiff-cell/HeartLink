@@ -10,7 +10,11 @@ const val ROUT_REMINDERS= "reminders"
 const val ROUT_WELCOMING= "welcoming"
 const val ROUT_PROGRESS= "progress"
 const val ROUT_DAILYAFFIRMATION= "dailyaffirmation"
+const val ROUT_CLINIC= "clinic"
 const val ROUT_MOODTRACKER= "moodtracker"
+const val ROUT_SETTINGS= "settings"
+const val ROUT_WELLNESS= "wellness"
+
 
 
 //Auth
