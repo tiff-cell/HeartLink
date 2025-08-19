@@ -27,11 +27,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.R
 import com.celly.heartlink.navigation.ROUT_COMMUNITY
+import com.celly.heartlink.navigation.ROUT_HEALTHREMINDERS
 import com.celly.heartlink.navigation.ROUT_HOME
 import com.celly.heartlink.navigation.ROUT_JOURNAL
 import com.celly.heartlink.navigation.ROUT_MOODTRACKER
 import com.celly.heartlink.navigation.ROUT_RESOURCES
-import com.celly.heartlink.navigation.ROUT_REMINDERS
 import com.celly.heartlink.navigation.ROUT_SETTINGS
 
 // Define the colors and font to match your login and register screens
@@ -179,7 +179,8 @@ fun HomeScreen(navController: NavController) {
             item { SearchBar() }
             item { WelcomeCard(username = "Stephannie") }
             // Replaced MedicationCard with a new WellnessRemindersCard
-            item { WellnessRemindersCard(onButtonClick = { navController.navigate(ROUT_REMINDERS) }) }
+            item { WellnessRemindersCard(onButtonClick = { navController.navigate(
+                ROUT_HEALTHREMINDERS) }) }
             item { JournalCard(onButtonClick = { navController.navigate(ROUT_JOURNAL) }) }
             item { ResourceCard(onButtonClick = { navController.navigate(ROUT_RESOURCES) }) }
             item { CommunityCard(onButtonClick = { navController.navigate(ROUT_COMMUNITY) }) }

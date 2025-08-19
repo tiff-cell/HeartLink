@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.celly.heartlink.ui.theme.Purple5001
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -266,7 +267,7 @@ fun JournalingShortcutCard(onClick: () -> Unit) {
             .fillMaxWidth()
             .height(70.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = DarkGreen),
+        colors = CardDefaults.cardColors(containerColor = Purple500),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(

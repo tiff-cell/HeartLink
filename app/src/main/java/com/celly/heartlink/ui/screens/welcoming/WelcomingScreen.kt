@@ -1,15 +1,21 @@
 package com.celly.heartlink.ui.screens.welcoming
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -31,6 +37,24 @@ val GradientEnd = Color(0xFFF7F7F7)   // Soft gray
 
 @Composable
 fun WelcomeMessageScreen(navController: NavController) {
+    // Pulsating background animation
+    val infiniteTransition = rememberInfiniteTransition()
+    val animatedAlpha by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0.8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    // Button press animation
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = tween(durationMillis = 150)
+    )
+
     val messageText = buildAnnotatedString {
         append("Welcome to a place where your heart is our link. ")
         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)) {
@@ -44,7 +68,7 @@ fun WelcomeMessageScreen(navController: NavController) {
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(GradientStart, GradientEnd)
+                    colors = listOf(GradientStart.copy(alpha = animatedAlpha), GradientEnd)
                 )
             ),
         contentAlignment = Alignment.Center
@@ -85,7 +109,14 @@ fun WelcomeMessageScreen(navController: NavController) {
                 onClick = { navController.navigate(ROUT_HOME) { popUpTo(ROUT_HOME) { inclusive = true } } },
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
-                    .height(56.dp),
+                    .height(56.dp)
+                    .scale(scale)
+                    .pointerInput(Unit) {
+                        detectPressAndRelease(
+                            onPress = { isPressed = true },
+                            onRelease = { isPressed = false }
+                        )
+                    },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF673AB7)),
                 shape = RoundedCornerShape(28.dp)
             ) {
@@ -98,6 +129,19 @@ fun WelcomeMessageScreen(navController: NavController) {
                 )
             }
         }
+    }
+}
+
+// Helper function for press and release detection
+suspend fun androidx.compose.ui.input.pointer.PointerInputScope.detectPressAndRelease(
+    onPress: () -> Unit,
+    onRelease: () -> Unit
+) {
+    awaitEachGesture {
+        awaitFirstDown(requireUnconsumed = false)
+        onPress()
+        waitForUpOrCancellation()
+        onRelease()
     }
 }
 

@@ -1,11 +1,12 @@
-package com.celly.heartlink.ui.screens.wellness
+package com.celly.heartlink.ui.screens.healthy
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
@@ -16,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,29 +26,46 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.R
-import com.celly.heartlink.ui.screens.AppRouter
 
 // Define colors to match your app's theme
 private val Purple500 = Color(0xFF673AB7)
 private val Grey700 = Color(0xFF616161)
 private val LightGray = Color(0xFFF5F5F5)
 
+// Sample data for healthy eating tips
+data class HealthyTip(val title: String, val content: String)
+
+val healthyTips = listOf(
+    HealthyTip("Hydrate, Hydrate, Hydrate", "Drinking plenty of water throughout the day is crucial for metabolism and overall health. Aim for at least 8 glasses."),
+    HealthyTip("Eat the Rainbow", "Incorporate a variety of colorful fruits and vegetables into your meals. Each color provides different essential vitamins and minerals."),
+    HealthyTip("Mindful Eating", "Pay attention to what you're eating without distractions. This can help you recognize your body's hunger and fullness cues."),
+    HealthyTip("Balance Your Plate", "Ensure your meals include lean protein, whole grains, and a mix of healthy fats to keep you full and energized."),
+    HealthyTip("Snack Smart", "Choose healthy snacks like nuts, seeds, or yogurt to avoid unhealthy cravings and maintain energy levels between meals.")
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WellnessScreen(navController: NavController) {
+fun HealthyEatingScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Your Wellness Journey",
+                        text = "Healthy Eating",
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Purple500
-                )
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Purple500)
             )
         },
         bottomBar = {
@@ -105,107 +122,69 @@ fun WellnessScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                WellnessCard(
-                    icon = painterResource(id = R.drawable.dining),
-                    title = "Healthy Eating",
-                    description = "Discover tips for a balanced diet and nutritional facts.",
-                    onClick = { navController.navigate(AppRouter.ROUTE_HEALTHY_EATING) },
-                    // Using a drawable resource ID
-                    imageId = R.drawable.healthy_eating_image
+                Image(
+                    painter = painterResource(id = R.drawable.healthy_eating_image),
+                    contentDescription = "A variety of healthy foods on a table",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
                 )
             }
             item {
-                WellnessCard(
-                    icon = painterResource(id = R.drawable.fitnesscenter),
-                    title = "Workout Plans",
-                    description = "Find personalized workout routines for all fitness levels.",
-                    onClick = { navController.navigate(AppRouter.ROUTE_WORKOUTS)},
-                    // Using a drawable resource ID
-                    imageId = R.drawable.workout_plan
+                Text(
+                    text = "Welcome to the Healthy Eating section!",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Grey700
                 )
             }
             item {
-                WellnessCard(
-                    icon = painterResource(id = R.drawable.localdining),
-                    title = "Food Recommendations",
-                    description = "Get recipe ideas and healthy meal suggestions.",
-                    onClick = {navController.navigate(AppRouter.ROUTE_FOOD_RECOMMENDATIONS)},
-                    // Using a drawable resource ID
-                    imageId = R.drawable.food_recommendations_image
+                Text(
+                    text = "Here you'll find tips and information on nutrition.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Gray
                 )
+            }
+            items(healthyTips) { tip ->
+                TipCard(tip = tip)
             }
         }
     }
 }
 
 @Composable
-fun WellnessCard(
-    icon: Painter,
-    title: String,
-    description: String,
-    onClick: () -> Unit,
-    imageId: Int? // Changed parameter type from String to Int
-) {
+fun TipCard(tip: HealthyTip) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = icon,
-                    contentDescription = null,
-                    tint = Purple500,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = title,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Grey700
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = description,
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
-            }
-
-            // This is the new part for the image
-            imageId?.let {
-                Spacer(modifier = Modifier.height(16.dp))
-                Image(
-                    // Now using the imageId parameter
-                    painter = painterResource(id = it),
-                    contentDescription = "Image for $title",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
-            }
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = tip.title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Grey700
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = tip.content,
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun WellnessScreenPreview() {
-    WellnessScreen(navController = rememberNavController())
+fun HealthyEatingScreenPreview() {
+    HealthyEatingScreen(navController = rememberNavController())
 }

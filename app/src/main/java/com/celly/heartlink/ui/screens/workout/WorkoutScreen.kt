@@ -1,11 +1,12 @@
-package com.celly.heartlink.ui.screens.wellness
+package com.celly.heartlink.ui.screens.workout
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
@@ -16,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,29 +26,43 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.R
-import com.celly.heartlink.ui.screens.AppRouter
 
-// Define colors to match your app's theme
-private val Purple500 = Color(0xFF673AB7)
-private val Grey700 = Color(0xFF616161)
-private val LightGray = Color(0xFFF5F5F5)
+// Placeholder data for workout plans
+data class WorkoutPlan(
+    val title: String,
+    val description: String,
+    val difficulty: String
+)
+
+private val workoutPlans = listOf(
+    WorkoutPlan("Beginner's Core", "A simple routine to strengthen your core.", "Easy"),
+    WorkoutPlan("Full Body Burn", "Targets all major muscle groups in a 30-minute session.", "Medium"),
+    WorkoutPlan("Advanced HIIT", "High-intensity interval training for maximum calorie burn.", "Hard")
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WellnessScreen(navController: NavController) {
+fun WorkoutsScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Your Wellness Journey",
+                        text = "Workout Plans",
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Purple500
-                )
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF673AB7))
             )
         },
         bottomBar = {
@@ -98,7 +112,7 @@ fun WellnessScreen(navController: NavController) {
                 }
             }
         },
-        containerColor = LightGray
+        containerColor = Color(0xFFF5F5F5)
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -108,104 +122,107 @@ fun WellnessScreen(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                WellnessCard(
-                    icon = painterResource(id = R.drawable.dining),
-                    title = "Healthy Eating",
-                    description = "Discover tips for a balanced diet and nutritional facts.",
-                    onClick = { navController.navigate(AppRouter.ROUTE_HEALTHY_EATING) },
-                    // Using a drawable resource ID
-                    imageId = R.drawable.healthy_eating_image
+                Image(
+                    painter = painterResource(id = R.drawable.ic_working_out),
+                    contentDescription = "Someone working out",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
                 )
             }
             item {
-                WellnessCard(
-                    icon = painterResource(id = R.drawable.fitnesscenter),
-                    title = "Workout Plans",
-                    description = "Find personalized workout routines for all fitness levels.",
-                    onClick = { navController.navigate(AppRouter.ROUTE_WORKOUTS)},
-                    // Using a drawable resource ID
-                    imageId = R.drawable.workout_plan
-                )
+                ProgressTrackerCard()
             }
             item {
-                WellnessCard(
-                    icon = painterResource(id = R.drawable.localdining),
-                    title = "Food Recommendations",
-                    description = "Get recipe ideas and healthy meal suggestions.",
-                    onClick = {navController.navigate(AppRouter.ROUTE_FOOD_RECOMMENDATIONS)},
-                    // Using a drawable resource ID
-                    imageId = R.drawable.food_recommendations_image
+                Text(
+                    text = "Featured Workout Plans",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF616161),
+                    modifier = Modifier.padding(top = 8.dp)
                 )
+            }
+            items(workoutPlans) { plan ->
+                WorkoutPlanCard(plan)
             }
         }
     }
 }
 
 @Composable
-fun WellnessCard(
-    icon: Painter,
-    title: String,
-    description: String,
-    onClick: () -> Unit,
-    imageId: Int? // Changed parameter type from String to Int
-) {
+fun ProgressTrackerCard() {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = icon,
-                    contentDescription = null,
-                    tint = Purple500,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = title,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Grey700
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = description,
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
-            }
+            Text(
+                text = "Daily Progress",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF616161)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            LinearProgressIndicator(
+                progress = { 0.7f }, // Placeholder progress value (70%)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = Color(0xFF673AB7),
+                trackColor = Color(0xFFE0E0E0)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "70% of your daily goal completed",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+        }
+    }
+}
 
-            // This is the new part for the image
-            imageId?.let {
-                Spacer(modifier = Modifier.height(16.dp))
-                Image(
-                    // Now using the imageId parameter
-                    painter = painterResource(id = it),
-                    contentDescription = "Image for $title",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
-            }
+@Composable
+fun WorkoutPlanCard(plan: WorkoutPlan) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = plan.title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF616161)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = plan.description,
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Difficulty: ${plan.difficulty}",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF673AB7)
+            )
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun WellnessScreenPreview() {
-    WellnessScreen(navController = rememberNavController())
+fun WorkoutsScreenPreview() {
+    WorkoutsScreen(navController = rememberNavController())
 }

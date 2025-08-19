@@ -2,22 +2,21 @@ package com.celly.heartlink.ui.screens.resources
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -45,12 +44,16 @@ data class Article(
 val dummyArticles = listOf(
     Article("Understanding HIV Treatment Options", "WHO", "https://www.who.int/news-room/fact-sheets/detail/hiv-aids"),
     Article("Mental Wellness and Chronic Illness", "NIH", "https://www.nimh.nih.gov/health/topics/mental-health-and-chronic-illness"),
-    Article("The Importance of a Support System", "CDC", "https://www.cdc.gov/hiv/basics/livingwithhiv/mental-health.html")
+    Article("The Importance of a Support System", "CDC", "https://www.cdc.gov/hiv/basics/livingwithhiv/mental-health.html"),
+    Article("Navigating Legal Rights", "ACLU", "https://www.aclu.org/know-your-rights/lgbtq-rights/"),
+    Article("Financial Planning with Chronic Conditions", "AARP", "https://www.aarp.org/money/credit-loans-debt/info-2023/financial-planning-with-chronic-illness.html")
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResourcesScreen(navController: NavController) {
+    var searchQuery by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,7 +82,7 @@ fun ResourcesScreen(navController: NavController) {
         },
         bottomBar = {
             BottomAppBar(
-                containerColor = com.celly.heartlink.ui.screens.clinics.Purple500,
+                containerColor = Purple500,
                 contentColor = Color.White
             ) {
                 // Home Icon
@@ -133,13 +136,188 @@ fun ResourcesScreen(navController: NavController) {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { EducationalContentSection(dummyArticles) }
+            // New: Search Bar
+            item {
+                SearchBar(searchQuery = searchQuery, onQueryChange = { searchQuery = it })
+            }
+
+            // New: Featured Articles Carousel
+            item {
+                FeaturedArticlesCarousel(articles = dummyArticles)
+            }
+
+            // Filtered articles based on search query
+            val filteredArticles = dummyArticles.filter {
+                it.title.contains(searchQuery, ignoreCase = true) || it.source.contains(searchQuery, ignoreCase = true)
+            }
+
+            items(filteredArticles) { article ->
+                ArticleCard(article = article)
+            }
+
             item { ClinicDirectorySection(onExploreClick = { /* Navigate to directory screen */ }) }
+
+            // New: Expandable Financial/Legal section
             item { FinancialLegalSection(onLearnMoreClick = { /* Navigate to financial resources */ }) }
         }
     }
 }
 
+// ---
+// ## New Component: Search Bar
+// ---
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBar(searchQuery: String, onQueryChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = searchQuery,
+        onValueChange = onQueryChange,
+        placeholder = { Text("Search for articles...") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            focusedBorderColor = Purple500,
+            unfocusedBorderColor = Grey700
+        )
+    )
+}
+
+// ---
+// ## New Component: Featured Articles Carousel
+// ---
+@Composable
+fun FeaturedArticlesCarousel(articles: List<Article>) {
+    Column {
+        Text(
+            text = "Featured Content",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Default,
+            color = Grey700
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items(articles) { article ->
+                FeaturedArticleCard(article = article)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FeaturedArticleCard(article: Article) {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier
+            .width(200.dp)
+            .height(150.dp)
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(article.url))
+                context.startActivity(intent)
+            },
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Purple500.copy(alpha = 0.8f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            Column(
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                Text(
+                    text = article.title,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = article.source,
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontWeight = FontWeight.Light
+                )
+            }
+        }
+    }
+}
+
+// ---
+// ## New Component: Expandable Section
+// ---
+@Composable
+fun FinancialLegalSection(onLearnMoreClick: () -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded }
+            .animateContentSize(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Financial & Legal Resources",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Default,
+                        color = Grey700
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Information on financial assistance and legal rights.",
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily.Default,
+                        color = Grey700
+                    )
+                }
+                Icon(
+                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = if (expanded) "Collapse" else "Expand",
+                    tint = Purple500
+                )
+            }
+
+            AnimatedVisibility(visible = expanded) {
+                Column(modifier = Modifier.padding(top = 16.dp)) {
+                    Divider(color = Grey700.copy(alpha = 0.2f))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "• Legal aid for medical claims\n" +
+                                "• Government financial assistance programs\n" +
+                                "• Insurance plan guides\n" +
+                                "• Understanding your rights in the workplace",
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily.Default,
+                        color = Grey700
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = onLearnMoreClick, colors = ButtonDefaults.buttonColors(containerColor = Purple500)) {
+                        Text("Learn More")
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Keep the existing composables as they are:
 @Composable
 fun EducationalContentSection(articles: List<Article>) {
     Column {
@@ -166,7 +344,6 @@ fun ArticleCard(article: Article) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                // This is how you would handle "functioning links"
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(article.url))
                 context.startActivity(intent)
             },
@@ -229,47 +406,6 @@ fun ClinicDirectorySection(onExploreClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
                     contentDescription = "Explore Directory",
-                    tint = Purple500
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun FinancialLegalSection(onLearnMoreClick: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Financial & Legal Resources",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Default,
-                    color = Grey700
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Information on financial assistance and legal rights.",
-                    fontSize = 14.sp,
-                    fontFamily = FontFamily.Default,
-                    color = Grey700
-                )
-            }
-            IconButton(onClick = onLearnMoreClick) {
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Learn More",
                     tint = Purple500
                 )
             }

@@ -215,7 +215,7 @@ fun AchievementCard(achievement: Achievement) {
                     text = "UNLOCKED",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = getDarkGreen()
+                    color = getOrange500()
                 )
             } else {
                 Text(

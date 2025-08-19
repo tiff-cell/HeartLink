@@ -1,5 +1,6 @@
 package com.celly.swaggy.ui.theme.screens.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.celly.heartlink.R
+import com.celly.heartlink.navigation.ROUT_ABOUT
 import com.celly.heartlink.navigation.ROUT_HOME
 import com.celly.heartlink.navigation.ROUT_REGISTER
 import com.celly.heartlink.viewmodel.AuthViewModel
@@ -38,6 +41,24 @@ fun LoginScreen(
 ){
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    // Observe login logic
+    LaunchedEffect(authViewModel) {
+        authViewModel.loggedInUser = { user ->
+            if (user == null) {
+                Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+            } else {
+                if (user.role == "Buyer") {
+                    navController.navigate(ROUT_HOME) {
+                    }
+                } else {
+                    navController.navigate(ROUT_ABOUT) {
+                    }
+                }
+            }
+        }
+    }
 
     // Use a Scaffold for a consistent structure and a nice background
     Scaffold(

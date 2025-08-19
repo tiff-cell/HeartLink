@@ -16,10 +16,11 @@ import com.celly.heartlink.ui.screens.clinics.ClinicFinderScreen
 import com.celly.heartlink.ui.screens.clinics.MoodTrackerScreen
 import com.celly.heartlink.ui.screens.community.CommunityScreen
 import com.celly.heartlink.ui.screens.dailyaffirmation.DailyAffirmationScreen
+import com.celly.heartlink.ui.screens.healthy.HealthyEatingScreen
 import com.celly.heartlink.ui.screens.home.HomeScreen
 import com.celly.heartlink.ui.screens.journal.JournalScreen
 import com.celly.heartlink.ui.screens.progress.ProgressScreen
-import com.celly.heartlink.ui.screens.reminders.RemindersScreen
+import com.celly.heartlink.ui.screens.reminders.HealthRemindersScreen
 import com.celly.heartlink.ui.screens.resources.ResourcesScreen
 import com.celly.heartlink.ui.screens.settings.SettingsScreen
 import com.celly.heartlink.ui.screens.splash.SplashScreen
@@ -63,8 +64,8 @@ fun AppNavHost(
         composable(ROUT_RESOURCES) {
             ResourcesScreen(navController)
         }
-        composable(ROUT_REMINDERS) {
-            RemindersScreen(navController)
+        composable(ROUT_HEALTHREMINDERS) {
+            HealthRemindersScreen(navController)
         }
         composable(ROUT_WELCOMING) {
             WelcomeMessageScreen(navController)
@@ -83,6 +84,9 @@ fun AppNavHost(
         }
         composable(ROUT_WELLNESS) {
             WellnessScreen(navController)
+        }
+        composable(ROUT_HEALTHY) {
+            HealthyEatingScreen(navController)
         }
         composable(ROUT_CLINIC) {
             // Assuming API_KEY is a constant or variable with your Google Maps API key
@@ -108,7 +112,7 @@ fun AppNavHost(
         composable(ROUT_LOGIN) {
             LoginScreen(authViewModel, navController) {
                 navController.navigate(ROUT_HOME) {
-                    popUpTo(ROUT_LOGIN) { inclusive = true }
+                    popUpTo(ROUT_HOME) { inclusive = true }
                 }
             }
         }

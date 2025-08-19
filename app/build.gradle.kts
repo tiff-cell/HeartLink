@@ -117,6 +117,21 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+
+    implementation("androidx.compose.material:material-icons-extended:1.6.8") // Replace with the latest version
+
+    // Image loading
+        implementation("io.coil-kt:coil-compose:2.5.0")
+
+        // Groovy
+        implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8") // Use the latest version
+
+
+
+
+
+
     
 
 
