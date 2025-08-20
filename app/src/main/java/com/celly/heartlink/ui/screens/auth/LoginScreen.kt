@@ -1,46 +1,47 @@
-package com.celly.swaggy.ui.theme.screens.auth
+package com.celly.heartlink.ui.screens.auth
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.celly.heartlink.R
-import com.celly.heartlink.navigation.ROUT_ABOUT
+import com.celly.heartlink.navigation.ROUT_COUNSELORAPP
+import com.celly.heartlink.navigation.ROUT_HEALTHREMINDERS
 import com.celly.heartlink.navigation.ROUT_HOME
 import com.celly.heartlink.navigation.ROUT_REGISTER
 import com.celly.heartlink.viewmodel.AuthViewModel
 
-
-// Define custom colors and font for a youthful and creative look
-val Purple200 = Color(0xFFCE93D8) // A soft, light purple
-fun getPurple500() = Color(0xFF673AB7) // A deeper, vibrant purple
-fun getGrey700() = Color(0xFF616161) // A dark, sophisticated grey
-fun getLightGray() = Color(0xFFF5F5F5) // A very light, clean grey
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     authViewModel: AuthViewModel,
     navController: NavController,
     onLoginSuccess: () -> Unit
-){
-    var username by remember { mutableStateOf("") }
+) {
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     // Observe login logic
@@ -49,114 +50,156 @@ fun LoginScreen(
             if (user == null) {
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
-                if (user.role == "Buyer") {
+                if (user.role == "Patient") {
                     navController.navigate(ROUT_HOME) {
                     }
-                } else {
-                    navController.navigate(ROUT_ABOUT) {
-                    }
+                } else if(user.role == "Doctor") {
+                    navController.navigate(ROUT_HEALTHREMINDERS)
+
+                }
+                else{
+                    navController.navigate(ROUT_COUNSELORAPP)
+
                 }
             }
         }
     }
 
-    // Use a Scaffold for a consistent structure and a nice background
-    Scaffold(
-        containerColor = getLightGray(),
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Heartlink",
-                        fontFamily =FontFamily.Cursive,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 28.sp,
-                        color = getPurple500()
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = getLightGray()
+    // Background Gradient with Emerald and Orange
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFFE0D8EF), Color(0xFF533198))
                 )
             )
-        }
-    ) { paddingValues ->
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Creative and unique app logo/illustration
+
+
             Image(
-                painter = painterResource(id = R.drawable.app_logo), // Replace with your logo
-                contentDescription = "App Logo",
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(RoundedCornerShape(24.dp))
+                painter = painterResource(id = R.drawable.img),
+                contentDescription = "",
+                modifier = Modifier.size(200.dp),
+
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(36.dp))
 
-            // Username input field
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Username", fontFamily =FontFamily.Cursive) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = getPurple500(),
-                    unfocusedBorderColor = getGrey700()
-                ),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Password input field
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password", fontFamily = FontFamily.Cursive) },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = getPurple500(),
-                    unfocusedBorderColor = getGrey700()
-                ),
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Interactive login button with a unique style
-            Button(
-                onClick = { ROUT_HOME},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = getPurple500()),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
+            // Animated Welcome Text
+            AnimatedVisibility(
+                visible = true,
+                enter = fadeIn(animationSpec = tween(1000)),
+                exit = fadeOut(animationSpec = tween(1000))
             ) {
                 Text(
-                    text = "Login",
-                    fontSize = 18.sp,
-                    fontFamily =FontFamily.Cursive,
+                    text = "Welcome to Heartlink.",
+                    fontSize = 40.sp,
+                    fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }
 
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // Email Input
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email Icon", tint = Color.Black) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0x80FFFFFF), shape = RoundedCornerShape(12.dp)),
+                shape = RoundedCornerShape(12.dp),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
+                )
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Password Input with Show/Hide Toggle
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon", tint = Color.Black) },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0x80FFFFFF), shape = RoundedCornerShape(12.dp)),
+                shape = RoundedCornerShape(12.dp),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                trailingIcon = {
+                    val image = if (passwordVisible) painterResource(R.drawable.passwordshow) else painterResource(R.drawable.passwordhide)
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password", tint = Color.Black)
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
+                )
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Gradient Login Button
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xFFE0D8EF), Color(0xFF533198))
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(
+                    onClick = {
+                        if (email.isBlank() || password.isBlank()) {
+                            Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                        } else {
+                            authViewModel.loginUser(email, password)
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Login", color = Color.White, fontFamily = FontFamily.Cursive, fontSize = 18.sp)
+                }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Register link for new users
+            // Register Navigation Button
             TextButton(onClick = { navController.navigate(ROUT_REGISTER) }) {
                 Text(
-                    text = "Don't have an account? Register",
-                    fontFamily =FontFamily.Cursive,
-                    color = getGrey700()
+                    "Don't have an account? Register",
+                    color = Color.White,
+                    fontFamily = FontFamily.Cursive
                 )
             }
         }

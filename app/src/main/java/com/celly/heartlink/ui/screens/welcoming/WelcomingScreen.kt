@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.R
 import com.celly.heartlink.navigation.ROUT_HOME
+import com.celly.heartlink.navigation.ROUT_REGISTER
 
 // Define a new, softer color palette for this specific screen
 val GradientStart = Color(0xFFEAD6FD) // Lighter purple
@@ -37,13 +38,13 @@ val GradientEnd = Color(0xFFF7F7F7)   // Soft gray
 
 @Composable
 fun WelcomeMessageScreen(navController: NavController) {
-    // Pulsating background animation
+    // Pulsating radial background animation
     val infiniteTransition = rememberInfiniteTransition()
-    val animatedAlpha by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0.8f,
+    val animatedProgress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1500, easing = LinearEasing),
+            animation = tween(durationMillis = 2000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         )
     )
@@ -67,12 +68,15 @@ fun WelcomeMessageScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(GradientStart.copy(alpha = animatedAlpha), GradientEnd)
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFFEAD6FD).copy(alpha = 0.5f + animatedProgress * 0.5f), Color.White),
+                    radius = 800f * (1 + animatedProgress)
                 )
             ),
         contentAlignment = Alignment.Center
     ) {
+
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -82,7 +86,7 @@ fun WelcomeMessageScreen(navController: NavController) {
         ) {
             // New: Image or Logo at the top
             Image(
-                painter = painterResource(id = R.drawable.app_logo), // Replace with your logo's resource ID
+                painter = painterResource(id = R.drawable.img), // Replace with your logo's resource ID
                 contentDescription = "Heartlink Logo",
                 modifier = Modifier.size(120.dp)
             )
@@ -106,7 +110,7 @@ fun WelcomeMessageScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(48.dp))
             Button(
-                onClick = { navController.navigate(ROUT_HOME) { popUpTo(ROUT_HOME) { inclusive = true } } },
+                onClick = { navController.navigate(ROUT_REGISTER)  },
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .height(56.dp)
@@ -122,14 +126,40 @@ fun WelcomeMessageScreen(navController: NavController) {
             ) {
                 Text(
                     text = "Begin My Journey",
-                    fontSize = 25.sp,
-                    fontFamily = FontFamily.Cursive,
-                    fontWeight = FontWeight.SemiBold,
                     color = Color.White
                 )
             }
         }
     }
+}
+
+@Composable
+fun AnimatedHeart() {
+    val infiniteTransition = rememberInfiniteTransition()
+    val xOffset by infiniteTransition.animateFloat(
+        initialValue = -50f,
+        targetValue = 50f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 4000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    val yOffset by infiniteTransition.animateFloat(
+        initialValue = -50f,
+        targetValue = 50f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    Image(
+        painter = painterResource(id = R.drawable.heart_icon), // You will need to add a heart icon here
+        contentDescription = "Animated Heart",
+        modifier = Modifier
+            .size(70.dp)
+            .offset(x = xOffset.dp, y = yOffset.dp)
+    )
 }
 
 // Helper function for press and release detection

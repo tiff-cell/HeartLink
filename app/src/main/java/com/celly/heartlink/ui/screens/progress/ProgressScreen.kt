@@ -33,9 +33,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.ui.screens.dailyaffirmation.getDarkGreen
 import com.celly.heartlink.ui.screens.dailyaffirmation.getGrey700
+import com.celly.heartlink.ui.screens.dailyaffirmation.getLightGray
 import com.celly.heartlink.ui.screens.dailyaffirmation.getOrange500
 import com.celly.heartlink.ui.screens.dailyaffirmation.getPurple500
-import com.celly.swaggy.ui.theme.screens.auth.getLightGray
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle

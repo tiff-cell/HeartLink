@@ -262,7 +262,7 @@ fun JournalingShortcutCard(onClick: () -> Unit) {
             .fillMaxWidth()
             .height(70.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = getDarkGreen()),
+        colors = CardDefaults.cardColors(containerColor = getPurple500()),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(

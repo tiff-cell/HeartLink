@@ -50,8 +50,10 @@ fun SettingsScreen(navController: NavController) {
         },
         bottomBar = {
             BottomAppBar(
-                containerColor = com.celly.heartlink.ui.screens.clinics.Purple500,
+                //  contentColor = Color.White
+                containerColor = Purple500,
                 contentColor = Color.White
+
             ) {
                 // Home Icon
                 IconButton(

@@ -1,6 +1,11 @@
 package com.celly.heartlink.ui.screens.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -33,12 +39,19 @@ import com.celly.heartlink.navigation.ROUT_JOURNAL
 import com.celly.heartlink.navigation.ROUT_MOODTRACKER
 import com.celly.heartlink.navigation.ROUT_RESOURCES
 import com.celly.heartlink.navigation.ROUT_SETTINGS
+import com.celly.heartlink.ui.screens.dailyaffirmation.getPurple500
+import com.celly.heartlink.ui.theme.Purple5001
+import java.time.LocalTime
 
 // Define the colors and font to match your login and register screens
 val Purple500 = Color(0xFF673AB7)
 val Grey700 = Color(0xFF616161)
 val LightGray = Color(0xFFF5F5F5)
+val MorningYellow = Color(0xFFFFF176)
+val AfternoonOrange = Color(0xFFFFA726)
+val EveningBlue = Color(0xFF42A5F5)
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -167,20 +180,19 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
             }
-        }
+        },
+        containerColor = LightGray
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item { SearchBar() }
             item { WelcomeCard(username = "Stephannie") }
-            // Replaced MedicationCard with a new WellnessRemindersCard
-            item { WellnessRemindersCard(onButtonClick = { navController.navigate(
-                ROUT_HEALTHREMINDERS) }) }
+            item { WellnessRemindersCard(onButtonClick = { navController.navigate(ROUT_HEALTHREMINDERS) }) }
             item { JournalCard(onButtonClick = { navController.navigate(ROUT_JOURNAL) }) }
             item { ResourceCard(onButtonClick = { navController.navigate(ROUT_RESOURCES) }) }
             item { CommunityCard(onButtonClick = { navController.navigate(ROUT_COMMUNITY) }) }
@@ -207,39 +219,58 @@ fun SearchBar() {
     )
 }
 
-// Reusable Composable for the Welcome Card
+// Reusable Composable for the Welcome Card (updated)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WelcomeCard(username: String) {
+    val currentTime = LocalTime.now()
+    val greeting = when {
+        currentTime.hour < 12 -> "Good morning,"
+        currentTime.hour < 18 -> "Good afternoon,"
+        else -> "Good evening,"
+    }
+    val imageRes = when {
+        currentTime.hour < 12 -> R.drawable.ic_morning_sun // You need to add this image
+        currentTime.hour < 18 -> R.drawable.ic_afternoon_sun // You need to add this image
+        else -> R.drawable.ic_night_moon // You need to add this image
+    }
+    val cardColor = when {
+        currentTime.hour < 12 -> MorningYellow.copy(alpha = 0.8f)
+        currentTime.hour < 18 -> AfternoonOrange.copy(alpha = 0.8f)
+        else -> EveningBlue.copy(alpha = 0.8f)
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Purple5001),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "User Avatar",
+                painter = painterResource(id = imageRes),
+                contentDescription = "Time of day illustration",
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(40.dp))
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Hello, $username!",
-                fontSize = 24.sp,
+                text = "$greeting $username!",
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Default,
-                color = MaterialTheme.colorScheme.onSurface
+                color = Grey700
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "You're doing great! Keep up the good work.",
                 textAlign = TextAlign.Center,
                 fontFamily = FontFamily.Default,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = Grey700
             )
         }
     }
@@ -248,21 +279,36 @@ fun WelcomeCard(username: String) {
 // NEW: Combined Wellness Reminders and Appointments Card
 @Composable
 fun WellnessRemindersCard(onButtonClick: () -> Unit) {
+    var scale by remember { mutableStateOf(1f) }
+    val animatedScale by animateFloatAsState(
+        targetValue = scale,
+        animationSpec = tween(durationMillis = 200)
+    )
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .scale(animatedScale),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier.padding(24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.event),
-                contentDescription = "Reminders and Appointments Icon",
-                modifier = Modifier.size(48.dp),
-                tint = Purple500
-            )
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(color = Purple500, shape = RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.calendar_img),
+                    contentDescription = "Reminders and Appointments Icon",
+                    modifier = Modifier.size(32.dp),
+                    //tint = Color.White
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -289,13 +335,14 @@ fun WellnessRemindersCard(onButtonClick: () -> Unit) {
     }
 }
 
-// Reusable Composable for the Journal Card
+// Reusable Composable for the Journal Card (updated)
 @Composable
 fun JournalCard(onButtonClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier.padding(24.dp),
@@ -309,7 +356,7 @@ fun JournalCard(onButtonClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "How are you feeling today?",
+                text = "Ready to check in on your feelings?",
                 modifier = Modifier.weight(1f),
                 fontFamily = FontFamily.Default,
                 fontSize = 18.sp
@@ -326,20 +373,22 @@ fun JournalCard(onButtonClick: () -> Unit) {
     }
 }
 
-// Reusable Composable for the Resource Card
+// Reusable Composable for the Resource Card (updated)
 @Composable
 fun ResourceCard(onButtonClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = Purple5001),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                text = "Tip of the Day:",
+                text = "Daily Inspiration:",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Default
+                fontFamily = FontFamily.Default,
+                color = Purple500
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -355,20 +404,21 @@ fun ResourceCard(onButtonClick: () -> Unit) {
     }
 }
 
-// A simple community card to show community integration
+// A simple community card to show community integration (updated)
 @Composable
 fun CommunityCard(onButtonClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier.padding(24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Person,
+                imageVector = Icons.Default.People,
                 contentDescription = "Community Icon",
                 modifier = Modifier.size(48.dp),
                 tint = Purple500
@@ -392,6 +442,7 @@ fun CommunityCard(onButtonClick: () -> Unit) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {

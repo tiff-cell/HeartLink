@@ -29,6 +29,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.celly.heartlink.R
 import com.celly.heartlink.navigation.ROUT_LOGIN
+import com.celly.heartlink.navigation.ROUT_WELCOMING
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -39,7 +40,7 @@ fun SplashScreen(navController: NavController) {
     val coroutine = rememberCoroutineScope()
     coroutine.launch {
         delay(2000)
-        navController.navigate(ROUT_LOGIN)
+        navController.navigate(ROUT_WELCOMING)
     }
 
     Column(

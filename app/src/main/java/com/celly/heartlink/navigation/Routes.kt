@@ -15,6 +15,7 @@ const val ROUT_MOODTRACKER= "moodtracker"
 const val ROUT_SETTINGS= "settings"
 const val ROUT_WELLNESS= "wellness"
 const val ROUT_HEALTHY= "healthy"
+const val ROUT_COUNSELORAPP= "counselorsapp"
 
 
 

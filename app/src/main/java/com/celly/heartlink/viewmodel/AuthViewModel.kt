@@ -16,7 +16,7 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun loginUser(email: String, password: String) {
+    fun loginUser(email: String, password: String,) {
         viewModelScope.launch {
             val user = repository.loginUser(email, password)
             loggedInUser?.invoke(user)
