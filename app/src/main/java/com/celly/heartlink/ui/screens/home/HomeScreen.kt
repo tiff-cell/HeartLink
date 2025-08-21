@@ -305,7 +305,7 @@ fun WellnessRemindersCard(onButtonClick: () -> Unit) {
                 Image(
                     painter = painterResource(R.drawable.calendar_img),
                     contentDescription = "Reminders and Appointments Icon",
-                    modifier = Modifier.size(32.dp),
+                    modifier = Modifier.size(50.dp),
                     //tint = Color.White
                 )
             }

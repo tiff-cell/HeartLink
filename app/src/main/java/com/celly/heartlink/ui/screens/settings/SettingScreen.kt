@@ -1,5 +1,3 @@
-package com.celly.heartlink.ui.screens.settings
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -153,7 +151,7 @@ fun SettingsItem(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = title, // Fix applied here
             tint = Purple500,
             modifier = Modifier.size(28.dp)
         )

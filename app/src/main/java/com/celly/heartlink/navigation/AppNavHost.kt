@@ -1,5 +1,7 @@
 package com.celly.heartlink.navigation
 
+
+import SettingsScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -22,9 +24,10 @@ import com.celly.heartlink.ui.screens.healthy.HealthyEatingScreen
 import com.celly.heartlink.ui.screens.home.HomeScreen
 import com.celly.heartlink.ui.screens.journal.JournalScreen
 import com.celly.heartlink.ui.screens.progress.ProgressScreen
+import com.celly.heartlink.ui.screens.registration.ProfessionalRegistrationScreen
+import com.celly.heartlink.ui.screens.registration.ViewDoctorsCounsellors
 import com.celly.heartlink.ui.screens.reminders.HealthRemindersScreen
 import com.celly.heartlink.ui.screens.resources.ResourcesScreen
-import com.celly.heartlink.ui.screens.settings.SettingsScreen
 import com.celly.heartlink.ui.screens.splash.SplashScreen
 import com.celly.heartlink.ui.screens.welcoming.WelcomeMessageScreen
 import com.celly.heartlink.ui.screens.wellness.WellnessScreen
@@ -93,6 +96,15 @@ fun AppNavHost(
             CounselorApp()
         }
 
+        composable(ROUT_REGISTRATION) {
+            ProfessionalRegistrationScreen(navController)
+        }
+        composable(ROUT_DOCTORSCOUNSELORS) {
+            ViewDoctorsCounsellors(navController)
+        }
+
+
+
         composable(ROUT_CLINIC) {
             // Assuming API_KEY is a constant or variable with your Google Maps API key
             val apiKey = "YOUR_GOOGLE_MAPS_API_KEY_HERE"
@@ -125,5 +137,10 @@ fun AppNavHost(
 
 
     }
+}
+
+@Composable
+fun ViewProfileScreen(navController: NavHostController) {
+
 }
 

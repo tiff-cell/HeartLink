@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.celly.heartlink"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.play.services.vision)
+    implementation(libs.ads.mobile.sdk)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -125,7 +126,9 @@ dependencies {
 
         // Groovy
         implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.compose.material:material-icons-extended:1.6.8") // Use the latest version
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+            // Use the latest version
+
 
 
 
