@@ -29,6 +29,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.celly.heartlink.R
+import com.celly.heartlink.navigation.ROUT_HOME
+import com.celly.heartlink.navigation.ROUT_JOURNAL
+import com.celly.heartlink.navigation.ROUT_MOODTRACKER
+import com.celly.heartlink.navigation.ROUT_RESOURCES
+import com.celly.heartlink.navigation.ROUT_SETTINGS
 import java.time.LocalTime
 
 // Define colors to maintain app consistency
@@ -92,51 +97,81 @@ fun JournalScreen(navController: NavController) {
       },
       bottomBar = {
          BottomAppBar(
-            containerColor = Purple500,
-            contentColor = Color.White
+            containerColor = com.celly.heartlink.ui.screens.home.Purple500
          ) {
             // Home Icon
             IconButton(
-               onClick = { navController.navigate("home_route") },
+               onClick = { navController.navigate(ROUT_HOME) },
                modifier = Modifier.weight(1f)
             ) {
                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                  Icon(Icons.Default.Home, contentDescription = "Home")
-                  Text(text = "Home", fontSize = 12.sp)
+                  Icon(
+                     imageVector = Icons.Default.Home,
+                     contentDescription = "Home",
+                     tint = Color.White
+                  )
+                  Text(text = "Home", fontSize = 10.sp, color = Color.White)
                }
             }
             // Check-in Icon
             IconButton(
-               onClick = { navController.navigate("mood_tracker_route") },
+               onClick = { navController.navigate(ROUT_MOODTRACKER) },
                modifier = Modifier.weight(1f)
             ) {
                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                  Icon(Icons.Default.Face, contentDescription = "Check-in")
-                  Text(text = "Check-in", fontSize = 12.sp)
+                  Icon(
+                     imageVector = Icons.Default.Face,
+                     contentDescription = "Check-in",
+                     tint = Color.White
+                  )
+                  Text(text = "Check-in", fontSize = 10.sp, color = Color.White)
                }
             }
             // Journal Icon
             IconButton(
-               onClick = { navController.navigate("journal_route") },
+               onClick = { navController.navigate(ROUT_JOURNAL) },
                modifier = Modifier.weight(1f)
             ) {
                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                  Icon(Icons.Default.Create, contentDescription = "Journal")
-                  Text(text = "Journal", fontSize = 12.sp)
+                  Icon(
+                     imageVector = Icons.Default.Edit,
+                     contentDescription = "Journal",
+                     tint = Color.White
+                  )
+                  Text(text = "Journal", fontSize = 10.sp, color = Color.White)
+               }
+            }
+            // Resources Icon
+            IconButton(
+               onClick = { navController.navigate(ROUT_RESOURCES) },
+               modifier = Modifier.weight(1f)
+            ) {
+               Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                  Icon(
+                     imageVector = Icons.Default.Info,
+                     contentDescription = "Resources",
+                     tint = Color.White
+                  )
+                  Text(text = "Resources", fontSize = 10.sp, color = Color.White)
                }
             }
             // Settings Icon
             IconButton(
-               onClick = { navController.navigate("settings_route") },
+               onClick = { navController.navigate(ROUT_SETTINGS) },
                modifier = Modifier.weight(1f)
             ) {
                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                  Icon(Icons.Default.Settings, contentDescription = "Settings")
-                  Text(text = "Settings", fontSize = 12.sp)
+                  Icon(
+                     imageVector = Icons.Default.Settings,
+                     contentDescription = "Settings",
+                     tint = Color.White
+                  )
+                  Text(text = "Settings", fontSize = 10.sp, color = Color.White)
                }
             }
          }
       },
+
       floatingActionButton = {
          ExtendedFloatingActionButton(
             onClick = { /* Navigate to a new journal entry screen with image selector */ },

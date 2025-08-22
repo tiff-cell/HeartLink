@@ -32,11 +32,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.R
+import com.celly.heartlink.navigation.ROUT_ABOUT
 import com.celly.heartlink.navigation.ROUT_COMMUNITY
 import com.celly.heartlink.navigation.ROUT_HEALTHREMINDERS
 import com.celly.heartlink.navigation.ROUT_HOME
 import com.celly.heartlink.navigation.ROUT_JOURNAL
+import com.celly.heartlink.navigation.ROUT_MILESTONE
 import com.celly.heartlink.navigation.ROUT_MOODTRACKER
+import com.celly.heartlink.navigation.ROUT_PROFILE
+import com.celly.heartlink.navigation.ROUT_PROGRESS
 import com.celly.heartlink.navigation.ROUT_RESOURCES
 import com.celly.heartlink.navigation.ROUT_SETTINGS
 import com.celly.heartlink.ui.screens.dailyaffirmation.getPurple500
@@ -96,7 +100,7 @@ fun HomeScreen(navController: NavController) {
                         )
                     }
                     // Profile Icon
-                    IconButton(onClick = { /* Navigate to profile */ }) {
+                    IconButton(onClick = { navController.navigate(ROUT_PROFILE) }) {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Profile"
@@ -192,6 +196,21 @@ fun HomeScreen(navController: NavController) {
         ) {
             item { SearchBar() }
             item { WelcomeCard(username = "Stephannie") }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    MilestonesCard(
+                        modifier = Modifier.weight(1f),
+                        onButtonClick = { navController.navigate(ROUT_MILESTONE) }
+                    )
+                    ProgressCard(
+                        modifier = Modifier.weight(1f),
+                        onButtonClick = { navController.navigate(ROUT_PROGRESS) }
+                    )
+                }
+            }
             item { WellnessRemindersCard(onButtonClick = { navController.navigate(ROUT_HEALTHREMINDERS) }) }
             item { JournalCard(onButtonClick = { navController.navigate(ROUT_JOURNAL) }) }
             item { ResourceCard(onButtonClick = { navController.navigate(ROUT_RESOURCES) }) }
@@ -230,14 +249,9 @@ fun WelcomeCard(username: String) {
         else -> "Good evening,"
     }
     val imageRes = when {
-        currentTime.hour < 12 -> R.drawable.ic_morning_sun // You need to add this image
-        currentTime.hour < 18 -> R.drawable.ic_afternoon_sun // You need to add this image
-        else -> R.drawable.ic_night_moon // You need to add this image
-    }
-    val cardColor = when {
-        currentTime.hour < 12 -> MorningYellow.copy(alpha = 0.8f)
-        currentTime.hour < 18 -> AfternoonOrange.copy(alpha = 0.8f)
-        else -> EveningBlue.copy(alpha = 0.8f)
+        currentTime.hour < 12 -> R.drawable.ic_morning_sun
+        currentTime.hour < 18 -> R.drawable.ic_afternoon_sun
+        else -> R.drawable.ic_night_moon
     }
 
     Card(
@@ -306,7 +320,6 @@ fun WellnessRemindersCard(onButtonClick: () -> Unit) {
                     painter = painterResource(R.drawable.calendar_img),
                     contentDescription = "Reminders and Appointments Icon",
                     modifier = Modifier.size(50.dp),
-                    //tint = Color.White
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -438,6 +451,82 @@ fun CommunityCard(onButtonClick: () -> Unit) {
                     tint = Purple500
                 )
             }
+        }
+    }
+}
+
+// NEW: Milestones Card
+@Composable
+fun MilestonesCard(modifier: Modifier = Modifier, onButtonClick: () -> Unit) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Purple500),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = onButtonClick
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Milestones",
+                tint = Color.White,
+                modifier = Modifier.size(40.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Milestones",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Text(
+                text = "Celebrate your achievements!",
+                color = Color.White.copy(alpha = 0.8f),
+                fontSize = 12.sp
+            )
+        }
+    }
+}
+
+// NEW: Progress Card
+@Composable
+fun ProgressCard(modifier: Modifier = Modifier, onButtonClick: () -> Unit) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = onButtonClick
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.TrendingUp,
+                contentDescription = "Progress",
+                tint = Purple500,
+                modifier = Modifier.size(40.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Progress",
+                color = Purple500,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Text(
+                text = "Track your wellness journey.",
+                color = Grey700,
+                fontSize = 12.sp
+            )
         }
     }
 }

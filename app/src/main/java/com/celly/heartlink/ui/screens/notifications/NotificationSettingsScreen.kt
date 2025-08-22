@@ -1,4 +1,4 @@
-package com.celly.heartlink.ui.screens.settings
+package com.celly.heartlink.ui.screens.notifications
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,41 +9,46 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.celly.heartlink.navigation.ROUT_ABOUT
+import com.celly.heartlink.navigation.ROUT_HOME
 import com.celly.heartlink.navigation.ROUT_JOURNAL
 import com.celly.heartlink.navigation.ROUT_MOODTRACKER
 import com.celly.heartlink.navigation.ROUT_RESOURCES
 import com.celly.heartlink.navigation.ROUT_SETTINGS
-import com.celly.heartlink.ui.screens.home.Purple500
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(navController: NavController) {
+fun NotificationSettingsScreen(navController: NavController) {
+    // State variables for each notification setting
+    var allNotificationsEnabled by remember { mutableStateOf(true) }
+    var wellnessTipsEnabled by remember { mutableStateOf(true) }
+    var journalRemindersEnabled by remember { mutableStateOf(false) }
+    var moodCheckInsEnabled by remember { mutableStateOf(true) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "About HeartLink",
+                        text = "Notifications",
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
+                    // This IconButton is already clickable
                     IconButton(onClick = { navController.navigate(ROUT_SETTINGS) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -59,11 +64,12 @@ fun AboutScreen(navController: NavController) {
         },
         bottomBar = {
             BottomAppBar(
-                containerColor = Purple500
+                containerColor = com.celly.heartlink.ui.screens.home.Purple500
             ) {
                 // Home Icon
+                // This IconButton is already clickable
                 IconButton(
-                    onClick = { navController.navigate(ROUT_ABOUT) },
+                    onClick = { navController.navigate(ROUT_HOME) },
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -76,6 +82,7 @@ fun AboutScreen(navController: NavController) {
                     }
                 }
                 // Check-in Icon
+                // This IconButton is already clickable
                 IconButton(
                     onClick = { navController.navigate(ROUT_MOODTRACKER) },
                     modifier = Modifier.weight(1f)
@@ -90,6 +97,7 @@ fun AboutScreen(navController: NavController) {
                     }
                 }
                 // Journal Icon
+                // This IconButton is already clickable
                 IconButton(
                     onClick = { navController.navigate(ROUT_JOURNAL) },
                     modifier = Modifier.weight(1f)
@@ -104,6 +112,7 @@ fun AboutScreen(navController: NavController) {
                     }
                 }
                 // Resources Icon
+                // This IconButton is already clickable
                 IconButton(
                     onClick = { navController.navigate(ROUT_RESOURCES) },
                     modifier = Modifier.weight(1f)
@@ -118,6 +127,7 @@ fun AboutScreen(navController: NavController) {
                     }
                 }
                 // Settings Icon
+                // This IconButton is already clickable
                 IconButton(
                     onClick = { navController.navigate(ROUT_SETTINGS) },
                     modifier = Modifier.weight(1f)
@@ -138,76 +148,119 @@ fun AboutScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color(0xFFF5F5F5)), // Light gray background
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+                .background(Color(0xFFF5F5F5))
         ) {
             item {
-                AboutSection(
-                    title = "Our Mission",
-                    content = "HeartLink is dedicated to providing a safe and supportive space for emotional and mental wellness. We believe in the power of connection and self-discovery to help you navigate life's challenges. Our mission is to empower you to find strength, practice mindfulness, and build a more resilient heart."
-                )
-            }
-            item {
-                AboutSection(
-                    title = "What We Offer",
-                    content = "From mood tracking and guided meditations to a private journal and expert-curated wellness content, our app is your personal companion on your journey to a healthier, happier you. We focus on tools that are simple, accessible, and meaningful."
-                )
-            }
-            item {
-                AboutSection(
-                    title = "Our Promise",
-                    content = "Your privacy and well-being are at the core of what we do. HeartLink is built on the principles of empathy, security, and trust. We are a community that stands with you, every step of the way."
-                )
-            }
-            item {
                 Text(
-                    text = "© 2024 HeartLink. All rights reserved.",
-                    modifier = Modifier.fillMaxWidth().alpha(0.6f),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodySmall,
+                    text = "Manage your notification preferences to stay connected and on track with your wellness journey.",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )
+            }
+
+            // Main "Enable All" setting
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Enable all notifications",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Switch(
+                            checked = allNotificationsEnabled,
+                            onCheckedChange = { isChecked ->
+                                allNotificationsEnabled = isChecked
+                                // This will turn all other switches on/off
+                                wellnessTipsEnabled = isChecked
+                                journalRemindersEnabled = isChecked
+                                moodCheckInsEnabled = isChecked
+                            }
+                        )
+                    }
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = "Personalized notifications",
+                    modifier = Modifier.padding(start = 16.dp),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color(0xFF673AB7),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            // Specific notification settings
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Column(Modifier.padding(vertical = 8.dp)) {
+                        NotificationToggle(
+                            text = "Wellness Tips",
+                            checked = wellnessTipsEnabled,
+                            onCheckedChange = { wellnessTipsEnabled = it }
+                        )
+                        Divider(Modifier.padding(horizontal = 16.dp))
+                        NotificationToggle(
+                            text = "Journal Reminders",
+                            checked = journalRemindersEnabled,
+                            onCheckedChange = { journalRemindersEnabled = it }
+                        )
+                        Divider(Modifier.padding(horizontal = 16.dp))
+                        NotificationToggle(
+                            text = "Mood Check-ins",
+                            checked = moodCheckInsEnabled,
+                            onCheckedChange = { moodCheckInsEnabled = it }
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun AboutSection(title: String, content: String) {
-    Column(
+fun NotificationToggle(text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, shape = MaterialTheme.shapes.medium)
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = title,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF673AB7),
-            textAlign = TextAlign.Center
+            text = text,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyLarge
         )
-        Spacer(modifier = Modifier.height(12.dp))
-        Divider(
-            modifier = Modifier.width(60.dp),
-            thickness = 2.dp,
-            color = Color(0xFFEAD6FD) // Light purple divider
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = content,
-            fontSize = 16.sp,
-            color = Color(0xFF616161),
-            textAlign = TextAlign.Center,
-            lineHeight = 24.sp
+        Spacer(Modifier.width(8.dp))
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AboutScreenPreview() {
-    AboutScreen(navController = rememberNavController())
+fun NotificationSettingsScreenPreview() {
+    NotificationSettingsScreen(navController = rememberNavController())
 }

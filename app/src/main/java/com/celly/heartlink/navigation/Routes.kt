@@ -18,6 +18,10 @@ const val ROUT_HEALTHY= "healthy"
 const val ROUT_COUNSELORAPP= "counselorsapp"
 const val ROUT_REGISTRATION= "registration"
 const val ROUT_DOCTORSCOUNSELORS= "available"
+const val ROUT_ACCOUNT= "account"
+const val ROUT_NOTIFICATIONS= "notifications"
+const val ROUT_PROFILE= "profile"
+const val ROUT_MILESTONE= "milestone"
 
 
 

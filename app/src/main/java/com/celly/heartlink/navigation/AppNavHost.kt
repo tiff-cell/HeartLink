@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.celly.heartlink.data.UserDatabase
 import com.celly.heartlink.repository.UserRepository
-import com.celly.heartlink.ui.screens.about.AboutScreen
+import com.celly.heartlink.ui.screens.account.AccountScreen
 import com.celly.heartlink.ui.screens.auth.LoginScreen
 import com.celly.heartlink.ui.screens.clinics.ClinicFinderScreen
 import com.celly.heartlink.ui.screens.clinics.MoodTrackerScreen
@@ -23,11 +23,16 @@ import com.celly.heartlink.ui.screens.dailyaffirmation.DailyAffirmationScreen
 import com.celly.heartlink.ui.screens.healthy.HealthyEatingScreen
 import com.celly.heartlink.ui.screens.home.HomeScreen
 import com.celly.heartlink.ui.screens.journal.JournalScreen
+import com.celly.heartlink.ui.screens.milestone.MilestoneScreen
+import com.celly.heartlink.ui.screens.notifications.NotificationSettingsScreen
+import com.celly.heartlink.ui.screens.notifications.NotificationSettingsScreenPreview
+import com.celly.heartlink.ui.screens.profile.ProfileScreen
 import com.celly.heartlink.ui.screens.progress.ProgressScreen
 import com.celly.heartlink.ui.screens.registration.ProfessionalRegistrationScreen
 import com.celly.heartlink.ui.screens.registration.ViewDoctorsCounsellors
 import com.celly.heartlink.ui.screens.reminders.HealthRemindersScreen
 import com.celly.heartlink.ui.screens.resources.ResourcesScreen
+import com.celly.heartlink.ui.screens.settings.AboutScreen
 import com.celly.heartlink.ui.screens.splash.SplashScreen
 import com.celly.heartlink.ui.screens.welcoming.WelcomeMessageScreen
 import com.celly.heartlink.ui.screens.wellness.WellnessScreen
@@ -101,6 +106,18 @@ fun AppNavHost(
         }
         composable(ROUT_DOCTORSCOUNSELORS) {
             ViewDoctorsCounsellors(navController)
+        }
+        composable(ROUT_ACCOUNT) {
+           AccountScreen(navController)
+        }
+        composable(ROUT_NOTIFICATIONS) {
+           NotificationSettingsScreen(navController)
+        }
+        composable(ROUT_PROFILE) {
+           ProfileScreen(navController)
+        }
+        composable(ROUT_MILESTONE) {
+            MilestoneScreen(navController)
         }
 
 

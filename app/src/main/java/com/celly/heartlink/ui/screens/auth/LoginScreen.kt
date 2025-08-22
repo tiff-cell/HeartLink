@@ -31,6 +31,7 @@ import com.celly.heartlink.navigation.ROUT_COUNSELORAPP
 import com.celly.heartlink.navigation.ROUT_HEALTHREMINDERS
 import com.celly.heartlink.navigation.ROUT_HOME
 import com.celly.heartlink.navigation.ROUT_REGISTER
+import com.celly.heartlink.navigation.ROUT_REGISTRATION
 import com.celly.heartlink.viewmodel.AuthViewModel
 
 @Composable
@@ -54,11 +55,11 @@ fun LoginScreen(
                     navController.navigate(ROUT_HOME) {
                     }
                 } else if(user.role == "Doctor") {
-                    navController.navigate(ROUT_HEALTHREMINDERS)
+                    navController.navigate(ROUT_REGISTRATION)
 
                 }
                 else{
-                    navController.navigate(ROUT_COUNSELORAPP)
+                    navController.navigate(ROUT_REGISTRATION)
 
                 }
             }

@@ -5,15 +5,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -22,7 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.celly.heartlink.ui.theme.Purple5001
+import com.celly.heartlink.navigation.ROUT_HOME
+import com.celly.heartlink.navigation.ROUT_JOURNAL
+import com.celly.heartlink.navigation.ROUT_MOODTRACKER
+import com.celly.heartlink.navigation.ROUT_RESOURCES
+import com.celly.heartlink.navigation.ROUT_SETTINGS
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -32,6 +37,8 @@ import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.compose.component.lineComponent
+import com.patrykandpatrick.vico.compose.component.shapeComponent
 
 // Define a consistent color palette for your app
 val Purple500 = Color(0xFF673AB7)
@@ -66,47 +73,76 @@ fun MoodTrackerScreen(navController: NavController) {
         },
         bottomBar = {
             BottomAppBar(
-                containerColor = Purple500,
-                contentColor = Color.White
+                containerColor = Purple500
             ) {
                 // Home Icon
                 IconButton(
-                    onClick = { navController.navigate("home_route") },
+                    onClick = { navController.navigate(ROUT_HOME) },
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Home, contentDescription = "Home")
-                        Text(text = "Home", fontSize = 12.sp)
+                        Icon(
+                            imageVector = Icons.Default.Home,
+                            contentDescription = "Home",
+                            tint = Color.White
+                        )
+                        Text(text = "Home", fontSize = 10.sp, color = Color.White)
                     }
                 }
                 // Check-in Icon
                 IconButton(
-                    onClick = { navController.navigate("mood_tracker_route") },
+                    onClick = { navController.navigate(ROUT_MOODTRACKER) },
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Face, contentDescription = "Check-in")
-                        Text(text = "Check-in", fontSize = 12.sp)
+                        Icon(
+                            imageVector = Icons.Default.Face,
+                            contentDescription = "Check-in",
+                            tint = Color.White
+                        )
+                        Text(text = "Check-in", fontSize = 10.sp, color = Color.White)
                     }
                 }
                 // Journal Icon
                 IconButton(
-                    onClick = { navController.navigate("journal_route") },
+                    onClick = { navController.navigate(ROUT_JOURNAL) },
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Create, contentDescription = "Journal")
-                        Text(text = "Journal", fontSize = 12.sp)
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Journal",
+                            tint = Color.White
+                        )
+                        Text(text = "Journal", fontSize = 10.sp, color = Color.White)
+                    }
+                }
+                // Resources Icon
+                IconButton(
+                    onClick = { navController.navigate(ROUT_RESOURCES) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Resources",
+                            tint = Color.White
+                        )
+                        Text(text = "Resources", fontSize = 10.sp, color = Color.White)
                     }
                 }
                 // Settings Icon
                 IconButton(
-                    onClick = { navController.navigate("settings_route") },
+                    onClick = { navController.navigate(ROUT_SETTINGS) },
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
-                        Text(text = "Settings", fontSize = 12.sp)
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.White
+                        )
+                        Text(text = "Settings", fontSize = 10.sp, color = Color.White)
                     }
                 }
             }
@@ -125,14 +161,14 @@ fun MoodTrackerScreen(navController: NavController) {
                 AffirmationCard(affirmation = dailyAffirmation)
             }
             item {
-                MoodTrackerSection(onMoodLogged = { /* TODO: Add logic to log mood */ })
+                MoodTrackerSection(navController = navController)
             }
             item {
                 MoodHistoryGraph(moodData = moodData)
             }
             item {
                 JournalingShortcutCard(onClick = {
-                    // TODO: Navigate to the Journal screen
+                    navController.navigate(ROUT_JOURNAL)
                 })
             }
         }
@@ -172,9 +208,12 @@ fun AffirmationCard(affirmation: String) {
     }
 }
 
-// Composable for logging the user's current mood
+// Composable for logging the user's current mood with a text field
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoodTrackerSection(onMoodLogged: () -> Unit) {
+fun MoodTrackerSection(navController: NavController) {
+    var moodText by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -185,8 +224,20 @@ fun MoodTrackerSection(onMoodLogged: () -> Unit) {
             color = Grey700
         )
         Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = moodText,
+            onValueChange = { moodText = it },
+            label = { Text("Describe your mood...") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Purple500,
+                unfocusedBorderColor = Grey700
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = onMoodLogged,
+            onClick = { navController.navigate(ROUT_MOODTRACKER) },
             colors = ButtonDefaults.buttonColors(containerColor = Purple500),
             shape = RoundedCornerShape(24.dp),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
@@ -205,7 +256,6 @@ fun MoodTrackerSection(onMoodLogged: () -> Unit) {
         }
     }
 }
-
 
 @Composable
 fun MoodHistoryGraph(moodData: ChartEntryModel) {
@@ -241,7 +291,7 @@ fun MoodHistoryGraph(moodData: ChartEntryModel) {
                         ),
                         lines = listOf(
                             LineChart.LineSpec(
-                                lineColor =4,
+                                lineColor = 4, // Fix applied here
                                 pointConnector = DefaultPointConnector(cubicStrength = 0.5f),
                                 point = null
                             )
